@@ -1,3 +1,13 @@
+"""Inventory extraction pipeline with schema enforcement and model constraints.
+
+This script shows two constraint layers:
+1) prompt-level constraints in `system_instruction`
+2) schema and validation constraints in `MerchantRequest` and `parse_inventory`
+
+Add more prompt-level constraints inside `system_instruction` if you want the model
+output to be stricter, or add more Python-side validation in `parse_inventory`.
+"""
+
 from pydantic import BaseModel
 from typing import Optional, Literal
 import ollama
@@ -12,7 +22,8 @@ class MerchantRequest(BaseModel):
 
 
 # Add more prompt-level constraints here if you want the model to be stricter.
-# Examples: require certain field ordering, reject extra fields, enforce exact terminology.
+# Examples: require certain field ordering, reject extra fields, enforce exact terminology,
+# or explicitly require the presence of a specific field name.
 system_instruction = f"""
 You are a strict data extraction system for an administrative merchant tool.
 Your only job is to extract inventory request details from raw text and output them as valid JSON.

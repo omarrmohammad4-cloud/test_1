@@ -1,0 +1,14 @@
+# Ignore local Python virtual environment and temporary build files
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+build/
+dist/
+.eggs/
+pip-wheel-metadata/
+*.egg-info/
+.ipynb_checkpoints/
