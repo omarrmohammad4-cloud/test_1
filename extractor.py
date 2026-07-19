@@ -50,8 +50,13 @@ def extract_inventory(raw_input: str) -> str:
 
 
 def parse_inventory(raw_json: str) -> MerchantRequest:
+    # Validate the model response against the schema.
+    # This is the second safety layer after the prompt-level constraints.
     # Add more Python-side constraints here if you need stricter validation.
-    # Examples: ensure quantity > 0, reject certain item names, normalize urgency values.
+    # Examples:
+    # - ensure quantity > 0
+    # - reject unknown item names
+    # - normalize or sanitize field values
     merchant_request = MerchantRequest.model_validate_json(raw_json)
     if merchant_request.quantity <= 0:
         raise ValueError("Quantity must be greater than zero")
