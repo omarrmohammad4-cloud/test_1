@@ -1,14 +1,6 @@
-from pydantic import BaseModel
-from typing import Optional, Literal
 import ollama
 
-
-class MerchantRequest(BaseModel):
-    action_type: str
-    item_name: str
-    quantity: int
-  
-    urgency_level: Optional[Literal["low", "normal", "high", "critical"]] = "normal"
+from extractor import MerchantRequest
 
 
 system_instruction = f"""
@@ -25,7 +17,6 @@ Never add markdown.
 If a value is missing, return null.
 
 Follow this schema:
-
 {MerchantRequest.model_json_schema()}
 
 ========================
@@ -70,27 +61,26 @@ Output:
     "urgency_level":"critical"
 }}
 
-
 Schema to follow:
 {MerchantRequest.model_json_schema()}
 """
 
 
-raw_input = "Hey, we need a restock of 50 mechanical keyboards for the downtown branch ASAP. Thanks."
-
-print(f"Processing input: '{raw_input}'...\n")
-
-
-response = ollama.chat(
-    model="qwen3:8b",
-    messages=[
-        {"role": "system", "content": system_instruction},
-        {"role": "user", "content": raw_input}
-    ],
-    format=MerchantRequest.model_json_schema(),
-    options={"temperature": 0.1} 
-)
+def extract_with_few_shot(raw_input: str) -> str:
+    response = ollama.chat(
+        model="qwen3:8b",
+        messages=[
+            {"role": "system", "content": system_instruction},
+            {"role": "user", "content": raw_input},
+        ],
+        format=MerchantRequest.model_json_schema(),
+        options={"temperature": 0.1},
+    )
+    return response["message"]["content"]
 
 
-print("Extracted Data:")
-print(response['message']['content'])
+if __name__ == "__main__":
+    raw_input = "Hey, we need a restock of 50 mechanical keyboards for the downtown branch ASAP. Thanks."
+    print(f"Processing input: '{raw_input}'...\n")
+    print("Extracted Data:")
+    print(extract_with_few_shot(raw_input))

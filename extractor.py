@@ -21,7 +21,8 @@ class MerchantRequest(BaseModel):
     urgency_level: Optional[Literal["low", "normal", "high", "critical"]] = "normal"
 
 
-# Add more prompt-level constraints here if you want the model to be stricter.
+# Add more prompt-level constrain
+# ts here if you want the model to be stricter.
 # Examples: require certain field ordering, reject extra fields, enforce exact terminology,
 # or explicitly require the presence of a specific field name.
 system_instruction = f"""
